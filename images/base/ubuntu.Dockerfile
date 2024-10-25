@@ -49,8 +49,13 @@ RUN systemctl enable docker
 # Create a symlink for standalone docker-compose usage
 RUN ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
 
+# Generate the desired locale (en_US.UTF-8)
+RUN locale-gen en_US.UTF-8
+
 # Make typing unicode characters in the terminal work.
 ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # Remove the `ubuntu` user and add a user `coder` so that you're not developing as the `root` user
 RUN userdel -r ubuntu && \
