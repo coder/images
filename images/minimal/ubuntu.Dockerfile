@@ -9,6 +9,7 @@ RUN apt-get update && \
     curl \
     git \
     jq \
+    locales \
     sudo \
     && rm -rf /var/lib/apt/lists/*
 
