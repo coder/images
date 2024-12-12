@@ -30,16 +30,21 @@ RUN apt-get update && \
     pipx \
     python3 \
     python3-pip \
-    software-properties-common \
+    # software-properties-common \
     sudo \
     systemd \
     systemd-sysv \
     unzip \
     vim \
     wget \
-    rsync && \
+    rsync
+
 # Install latest Git using their official PPA
-    add-apt-repository ppa:git-core/ppa && \
+# Note: due to a dependency issue with the armv7 `software-properties-common` package,
+# we can't use `add-apt-repository` here. Instead, we'll add the Git PPA
+# manually. TODO: remove this workaround when the issue is resolved.
+COPY git-core-ubuntu-ppa-noble.sources /etc/apt/sources.list.d/git-core-ubuntu-ppa-noble.sources
+RUN apt-get update && \
     apt-get install --yes git \
     && rm -rf /var/lib/apt/lists/*
 
