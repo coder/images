@@ -37,10 +37,16 @@ RUN apt-get update && \
     unzip \
     vim \
     wget \
-    rsync
+    rsync && \
+    rm -rf /var/lib/apt/lists/*
 
 # Compat: on non-armv7 architectures, install `software-properties-common`
-RUN [[ "$(dpkg --print-architecture)" != "armhf" ]] && apt-get install --yes software-properties-common || echo "WARN: Skipping software-properties-common installation on armhf"
+RUN [[ "$(dpkg --print-architecture)" != "armhf" ]] && \
+    ( \
+        apt-get update && \
+        apt-get install --yes software-properties-common && \
+        rm -rf /var/lib/apt/lists/* \
+    ) || echo "WARN: Skipping software-properties-common installation on armhf"
 
 # Install latest Git using their official PPA
 # Note: due to a dependency issue with the armv7 `software-properties-common` package,
