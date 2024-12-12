@@ -30,7 +30,7 @@ RUN apt-get update && \
     pipx \
     python3 \
     python3-pip \
-    # software-properties-common \
+# software-properties-common \
     sudo \
     systemd \
     systemd-sysv \
