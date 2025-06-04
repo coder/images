@@ -9,6 +9,7 @@ A minimal base image based on Red Hat Universal Base Image 9 (UBI9) for use with
 ## Features
 
 ### Base Operating System
+
 - **Red Hat UBI9**: Enterprise-grade, security-focused base image
 - **Enterprise Ready**: Red Hat supported with regular security updates
 - **Compliance**: Meets enterprise security and compliance requirements
@@ -17,6 +18,7 @@ A minimal base image based on Red Hat Universal Base Image 9 (UBI9) for use with
 ### Included Tools
 
 #### Essential Development Tools
+
 - **Development Tools**: GCC, make, and essential build tools
 - **Docker CE**: Container development and deployment
 - **Git**: Version control
@@ -24,6 +26,7 @@ A minimal base image based on Red Hat Universal Base Image 9 (UBI9) for use with
 - **Bash**: Default shell
 
 #### System Utilities
+
 - **curl/wget**: HTTP clients
 - **jq**: JSON processing
 - **htop**: Process monitoring
@@ -121,6 +124,7 @@ This base image is ideal for:
 ## Support
 
 For issues related to:
+
 - **This image**: Open an issue in the [coder/images](https://github.com/coder/images) repository
 - **Coder platform**: Visit [coder.com/docs](https://coder.com/docs)
 - **Red Hat UBI9**: Check [Red Hat documentation](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9)
