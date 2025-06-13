@@ -113,41 +113,27 @@ for image in "${IMAGES[@]}"; do
     # Extract Ubuntu version from Dockerfile
     ubuntu_base=$(grep "^FROM ubuntu:" "$image_path" | head -1 | cut -d: -f2)
     if [ -n "$ubuntu_base" ]; then
-      # Map Ubuntu codenames to version numbers
-      # Currently only Ubuntu 24.04 (Noble) is supported
+      # Extract Ubuntu version number
+      # Currently only Ubuntu 24.04 is supported
       case "$ubuntu_base" in
-        "noble")
-          ubuntu_version="24.04"
-          ;;
         "24.04")
           ubuntu_version="24.04"
-          ubuntu_codename="noble"
           ;;
         *)
           # Unsupported Ubuntu version - skip version-specific tags
           ubuntu_version=""
           if [ $QUIET = false ]; then
-            echo "Warning: Ubuntu version '$ubuntu_base' not supported for version-specific tags. Only Ubuntu 24.04 (Noble) is currently supported." >&2
+            echo "Warning: Ubuntu version '$ubuntu_base' not supported for version-specific tags. Only Ubuntu 24.04 is currently supported." >&2
           fi
           ;;
       esac
       
-      # Push version-specific tags
+      # Push version-specific tag
       if [ -n "$ubuntu_version" ]; then
         version_tag="codercom/enterprise-$image:ubuntu-$ubuntu_version"
         run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$version_tag" "$build_id"
         if [ $QUIET = false ]; then
           echo "Pushed Ubuntu version tag: ubuntu-$ubuntu_version" >&2
-        fi
-      fi
-      
-      # Push codename tag if we have one
-      if [ -n "${ubuntu_codename:-}" ] || [ "$ubuntu_base" != "$ubuntu_version" ]; then
-        codename="${ubuntu_codename:-$ubuntu_base}"
-        codename_tag="codercom/enterprise-$image:ubuntu-$codename"
-        run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$codename_tag" "$build_id"
-        if [ $QUIET = false ]; then
-          echo "Pushed Ubuntu codename tag: ubuntu-$codename" >&2
         fi
       fi
     fi

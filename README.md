@@ -23,16 +23,13 @@ version is updated.
 
 Currently supported Ubuntu versions:
 
-- `ubuntu-24.04` - Ubuntu 24.04 LTS (Noble Numbat)
-- `ubuntu-noble` - Ubuntu Noble Numbat (24.04 LTS)
+- `ubuntu-24.04` - Ubuntu 24.04 LTS
 
 Example usage:
 
 ```yaml
 # Use a specific Ubuntu version to ensure stability
 image: codercom/enterprise-base:ubuntu-24.04
-# or
-image: codercom/enterprise-base:ubuntu-noble
 ```
 
 This prevents workspaces from breaking when the base Ubuntu version is updated
