@@ -27,6 +27,7 @@ version is updated:
 - `ubuntu-jammy` - Ubuntu Jammy Jellyfish (22.04 LTS)
 
 Example usage:
+
 ```yaml
 # Use a specific Ubuntu version to ensure stability
 image: codercom/enterprise-base:ubuntu-24.04
