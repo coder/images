@@ -110,34 +110,20 @@ for image in "${IMAGES[@]}"; do
     ubuntu_base=$(grep "^FROM ubuntu:" "$image_path" | head -1 | cut -d: -f2)
     if [ -n "$ubuntu_base" ]; then
       # Map Ubuntu codenames to version numbers
+      # Currently only Ubuntu 24.04 (Noble) is supported
       case "$ubuntu_base" in
         "noble")
           ubuntu_version="24.04"
           ;;
-        "jammy")
-          ubuntu_version="22.04"
-          ;;
-        "focal")
-          ubuntu_version="20.04"
+        "24.04")
+          ubuntu_version="24.04"
+          ubuntu_codename="noble"
           ;;
         *)
-          # If it's already a version number, use it directly
-          if [[ "$ubuntu_base" =~ ^[0-9]+\.[0-9]+$ ]]; then
-            ubuntu_version="$ubuntu_base"
-            # Map version numbers to codenames
-            case "$ubuntu_version" in
-              "24.04")
-                ubuntu_codename="noble"
-                ;;
-              "22.04")
-                ubuntu_codename="jammy"
-                ;;
-              "20.04")
-                ubuntu_codename="focal"
-                ;;
-            esac
-          else
-            ubuntu_version=""
+          # Unsupported Ubuntu version - skip version-specific tags
+          ubuntu_version=""
+          if [ $QUIET = false ]; then
+            echo "Warning: Ubuntu version '$ubuntu_base' not supported for version-specific tags. Only Ubuntu 24.04 (Noble) is currently supported." >&2
           fi
           ;;
       esac

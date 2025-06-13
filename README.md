@@ -19,12 +19,12 @@ under the `ubuntu` tag.
 
 For Ubuntu-based images, additional version-specific tags are automatically created
 to provide stability and prevent unexpected breaking changes when the base Ubuntu
-version is updated:
+version is updated.
+
+Currently supported Ubuntu versions:
 
 - `ubuntu-24.04` - Ubuntu 24.04 LTS (Noble Numbat)
 - `ubuntu-noble` - Ubuntu Noble Numbat (24.04 LTS)
-- `ubuntu-22.04` - Ubuntu 22.04 LTS (Jammy Jellyfish)
-- `ubuntu-jammy` - Ubuntu Jammy Jellyfish (22.04 LTS)
 
 Example usage:
 
