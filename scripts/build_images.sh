@@ -101,9 +101,69 @@ for image in "${IMAGES[@]}"; do
     continue
   fi
 
+  # Build tag arguments for depot build command
+  tag_args=("--tag=$image_ref")
+  
+  # For Ubuntu images, add version-specific tags
+  if [ "$TAG" = "ubuntu" ]; then
+    # Extract Ubuntu version from Dockerfile
+    ubuntu_base=$(grep "^FROM ubuntu:" "$image_path" | head -1 | cut -d: -f2)
+    if [ -n "$ubuntu_base" ]; then
+      # Map Ubuntu codenames to version numbers
+      case "$ubuntu_base" in
+        "noble")
+          ubuntu_version="24.04"
+          ;;
+        "jammy")
+          ubuntu_version="22.04"
+          ;;
+        "focal")
+          ubuntu_version="20.04"
+          ;;
+        *)
+          # If it's already a version number, use it directly
+          if [[ "$ubuntu_base" =~ ^[0-9]+\.[0-9]+$ ]]; then
+            ubuntu_version="$ubuntu_base"
+            # Map version numbers to codenames
+            case "$ubuntu_version" in
+              "24.04")
+                ubuntu_codename="noble"
+                ;;
+              "22.04")
+                ubuntu_codename="jammy"
+                ;;
+              "20.04")
+                ubuntu_codename="focal"
+                ;;
+            esac
+          else
+            ubuntu_version=""
+          fi
+          ;;
+      esac
+      
+      # Add version-specific tags
+      if [ -n "$ubuntu_version" ]; then
+        tag_args+=("--tag=codercom/enterprise-$image:ubuntu-$ubuntu_version")
+        if [ $QUIET = false ]; then
+          echo "Adding Ubuntu version tag: ubuntu-$ubuntu_version" >&2
+        fi
+      fi
+      
+      # Add codename tag if we have one
+      if [ -n "${ubuntu_codename:-}" ] || [ "$ubuntu_base" != "$ubuntu_version" ]; then
+        codename="${ubuntu_codename:-$ubuntu_base}"
+        tag_args+=("--tag=codercom/enterprise-$image:ubuntu-$codename")
+        if [ $QUIET = false ]; then
+          echo "Adding Ubuntu codename tag: ubuntu-$codename" >&2
+        fi
+      fi
+    fi
+  fi
+
   run_trace $DRY_RUN depot build --project "gb3p8xrshk" --load --platform linux/arm64,linux/amd64,linux/arm/v7 --save --metadata-file="build_${image}.json" \
     "${docker_flags[@]}" \
     "$image_dir" \
     --file="$image_path" \
-    --tag="$image_ref" \| indent
+    "${tag_args[@]}" \| indent
 done

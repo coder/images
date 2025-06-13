@@ -15,6 +15,28 @@ https://hub.docker.com/r/codercom/enterprise-base. The tag is taken from the
 filename of the Dockerfile. For example, `base/ubuntu.Dockerfile` is
 under the `ubuntu` tag.
 
+### Ubuntu Version-Specific Tags
+
+For Ubuntu-based images, additional version-specific tags are automatically created
+to provide stability and prevent unexpected breaking changes when the base Ubuntu
+version is updated:
+
+- `ubuntu-24.04` - Ubuntu 24.04 LTS (Noble Numbat)
+- `ubuntu-noble` - Ubuntu Noble Numbat (24.04 LTS)
+- `ubuntu-22.04` - Ubuntu 22.04 LTS (Jammy Jellyfish)
+- `ubuntu-jammy` - Ubuntu Jammy Jellyfish (22.04 LTS)
+
+Example usage:
+```yaml
+# Use a specific Ubuntu version to ensure stability
+image: codercom/enterprise-base:ubuntu-24.04
+# or
+image: codercom/enterprise-base:ubuntu-noble
+```
+
+This prevents workspaces from breaking when the base Ubuntu version is updated
+in the main `ubuntu` tag.
+
 ## Contributing
 
 See our [contributing guide](.github/CONTRIBUTING.md).

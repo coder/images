@@ -107,4 +107,63 @@ for image in "${IMAGES[@]}"; do
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$image_ref" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$image_ref_date" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+  
+  # For Ubuntu images, also push version-specific tags
+  if [ "$TAG" = "ubuntu" ]; then
+    # Extract Ubuntu version from Dockerfile
+    ubuntu_base=$(grep "^FROM ubuntu:" "$image_path" | head -1 | cut -d: -f2)
+    if [ -n "$ubuntu_base" ]; then
+      # Map Ubuntu codenames to version numbers
+      case "$ubuntu_base" in
+        "noble")
+          ubuntu_version="24.04"
+          ;;
+        "jammy")
+          ubuntu_version="22.04"
+          ;;
+        "focal")
+          ubuntu_version="20.04"
+          ;;
+        *)
+          # If it's already a version number, use it directly
+          if [[ "$ubuntu_base" =~ ^[0-9]+\.[0-9]+$ ]]; then
+            ubuntu_version="$ubuntu_base"
+            # Map version numbers to codenames
+            case "$ubuntu_version" in
+              "24.04")
+                ubuntu_codename="noble"
+                ;;
+              "22.04")
+                ubuntu_codename="jammy"
+                ;;
+              "20.04")
+                ubuntu_codename="focal"
+                ;;
+            esac
+          else
+            ubuntu_version=""
+          fi
+          ;;
+      esac
+      
+      # Push version-specific tags
+      if [ -n "$ubuntu_version" ]; then
+        version_tag="codercom/enterprise-$image:ubuntu-$ubuntu_version"
+        run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$version_tag" "$build_id"
+        if [ $QUIET = false ]; then
+          echo "Pushed Ubuntu version tag: ubuntu-$ubuntu_version" >&2
+        fi
+      fi
+      
+      # Push codename tag if we have one
+      if [ -n "${ubuntu_codename:-}" ] || [ "$ubuntu_base" != "$ubuntu_version" ]; then
+        codename="${ubuntu_codename:-$ubuntu_base}"
+        codename_tag="codercom/enterprise-$image:ubuntu-$codename"
+        run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$codename_tag" "$build_id"
+        if [ $QUIET = false ]; then
+          echo "Pushed Ubuntu codename tag: ubuntu-$codename" >&2
+        fi
+      fi
+    fi
+  fi
 done
