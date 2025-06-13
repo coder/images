@@ -107,4 +107,35 @@ for image in "${IMAGES[@]}"; do
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$image_ref" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$image_ref_date" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+  
+  # For Ubuntu images, also push version-specific tags
+  if [ "$TAG" = "ubuntu" ]; then
+    # Extract Ubuntu version from Dockerfile
+    ubuntu_base=$(grep "^FROM ubuntu:" "$image_path" | head -1 | cut -d: -f2)
+    if [ -n "$ubuntu_base" ]; then
+      # Extract Ubuntu version number
+      # Currently only Ubuntu 24.04 is supported
+      case "$ubuntu_base" in
+        "24.04")
+          ubuntu_version="24.04"
+          ;;
+        *)
+          # Unsupported Ubuntu version - skip version-specific tags
+          ubuntu_version=""
+          if [ $QUIET = false ]; then
+            echo "Warning: Ubuntu version '$ubuntu_base' not supported for version-specific tags. Only Ubuntu 24.04 is currently supported." >&2
+          fi
+          ;;
+      esac
+      
+      # Push version-specific tag
+      if [ -n "$ubuntu_version" ]; then
+        version_tag="codercom/enterprise-$image:ubuntu-$ubuntu_version"
+        run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$version_tag" "$build_id"
+        if [ $QUIET = false ]; then
+          echo "Pushed Ubuntu version tag: ubuntu-$ubuntu_version" >&2
+        fi
+      fi
+    fi
+  fi
 done
