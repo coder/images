@@ -1,10 +1,10 @@
 # Node
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/codercom/enterprise-node?label=codercom%2Fenterprise-node)](https://hub.docker.com/r/codercom/enterprise-node)
+[![Docker Pulls](https://img.shields.io/docker/pulls/codercom/example-node?label=codercom%2Fexample-node)](https://hub.docker.com/r/codercom/example-node)
 
 ## Description
 
-Wraps [enterprise-base](../base/README.md) with the basics for Node development.
+Wraps [example-base](../base/README.md) with the basics for Node development.
 
 ## How To Use
 

@@ -1,10 +1,10 @@
 # Java
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/codercom/enterprise-java?label=codercom%2Fenterprise-java)](https://hub.docker.com/r/codercom/enterprise-java)
+[![Docker Pulls](https://img.shields.io/docker/pulls/codercom/example-java?label=codercom%2Fexample-java)](https://hub.docker.com/r/codercom/example-java)
 
 ## Description
 
-Wraps [enterprise-base](../base/README.md) with the basics for Java development.
+Wraps [example-base](../base/README.md) with the basics for Java development.
 
 > **Note:** This image does not contain IntelliJ. For an example of how to
 > install IntelliJ, see [enterprise-intellij](../../deprecated/intellij/README.md)
