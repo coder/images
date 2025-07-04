@@ -91,7 +91,8 @@ fi
 for image in "${IMAGES[@]}"; do
   image_dir="$PROJECT_ROOT/images/$image"
   image_file="${TAG}.Dockerfile"
-  image_ref="codercom/enterprise-$image:$TAG"
+  enterprise_image_ref="codercom/enterprise-$image:$TAG"
+  example_image_ref="codercom/example-$image:$TAG"
   image_path="$image_dir/$image_file"
 
   if [ ! -f "$image_path" ]; then
@@ -105,5 +106,6 @@ for image in "${IMAGES[@]}"; do
     "${docker_flags[@]}" \
     "$image_dir" \
     --file="$image_path" \
-    --tag="$image_ref" \| indent
+    --tag="$example_image_ref" \
+    --tag="$enterprise_image_ref" \| indent
 done
