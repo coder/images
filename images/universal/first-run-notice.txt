@@ -1,0 +1,7 @@
+Welcome to Coder! This environment is based on Microsoft's Dev Container Universal image
+with a suite of common tools and languages (Python, Java, Node.js, Go, Rust, etc.)
+
+➡️ https://github.com/devcontainers/images/tree/main/src/universal
+
+To use another image, modify your devcontainer.json or your Coder Template.
+
