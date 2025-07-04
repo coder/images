@@ -1,4 +1,4 @@
-FROM codercom/enterprise-minimal:latest
+FROM codercom/example-minimal:latest
 
 USER root
 

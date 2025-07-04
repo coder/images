@@ -1,4 +1,4 @@
-FROM codercom/enterprise-base:ubuntu
+FROM codercom/example-base:ubuntu
 
 # Run everything as root
 USER root
