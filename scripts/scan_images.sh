@@ -103,58 +103,62 @@ trivy_tmp_dir="$(mktemp -d -p "$PROJECT_ROOT")"
 
 trap 'rm -rf "$tmp_dir" "$trivy_tmp_dir"' EXIT
 
+PREFIXES=("example" "enterprise")
+
 for image in "${IMAGES[@]}"; do
-  image_ref="codercom/enterprise-${image}:${TAG}"
-  image_name="${image}-${TAG}"
-  output="${tmp_dir}/${image}-${TAG}.sarif"
+  for prefix in "${PREFIXES[@]}"; do
+    image_ref="codercom/${prefix}-${image}:${TAG}"
+    image_name="${prefix}-${image}-${TAG}"
+    output="${tmp_dir}/${prefix}-${image}-${TAG}.sarif"
 
-  if ! docker image inspect "$image_ref" >/dev/null 2>&1; then
-    echo "Image '$image_ref' does not exist locally; skipping" >&2
-    continue
-  fi
+    if ! docker image inspect "$image_ref" >/dev/null 2>&1; then
+      echo "Image '$image_ref' does not exist locally; skipping" >&2
+      continue
+    fi
 
-  old_tmpdir="${TMPDIR:-}"
-  export TMPDIR="$trivy_tmp_dir"
+    old_tmpdir="${TMPDIR:-}"
+    export TMPDIR="$trivy_tmp_dir"
 
-  # The timeout is set to 15 minutes because in Java images it can take a while
-  # to scan JAR files for vulnerabilities.
-  run_trace $DRY_RUN trivy image \
-    --severity CRITICAL,HIGH \
-    --format sarif \
-    --output "$output" \
-    --timeout 15m0s \
-    "$image_ref" 2>&1 | indent
+    # The timeout is set to 15 minutes because in Java images it can take a while
+    # to scan JAR files for vulnerabilities.
+    run_trace $DRY_RUN trivy image \
+      --severity CRITICAL,HIGH \
+      --format sarif \
+      --output "$output" \
+      --timeout 15m0s \
+      "$image_ref" 2>&1 | indent
 
-  if [ "$old_tmpdir" = "" ]; then
-    unset TMPDIR
-  else
-    export TMPDIR="$old_tmpdir"
-  fi
+    if [ "$old_tmpdir" = "" ]; then
+      unset TMPDIR
+    else
+      export TMPDIR="$old_tmpdir"
+    fi
 
-  if [ $DRY_RUN = true ]; then
-    continue
-  fi
+    if [ $DRY_RUN = true ]; then
+      continue
+    fi
 
-  if [ ! -f "$output" ]; then
-    echo "No SARIF output found for image '$image_ref' at '$output'" >&2
-    exit 1
-  fi
+    if [ ! -f "$output" ]; then
+      echo "No SARIF output found for image '$image_ref' at '$output'" >&2
+      exit 1
+    fi
 
-  # Do substitutions to add extra details to every message. Without these
-  # substitutions, most messages won't have any information about which image
-  # the vulnerability was found in.
-  jq \
-    ".runs[].tool.driver.name |= \"Trivy ${image_name}\"" \
-    "$output" >"$output.tmp"
-  mv "$output.tmp" "$output"
-  jq \
-    ".runs[].results[].locations[].physicalLocation.artifactLocation.uri |= \"${image_name}/\" + ." \
-    "$output" >"$output.tmp"
-  mv "$output.tmp" "$output"
-  jq \
-    ".runs[].results[].locations[].message.text |= \"${image_name}: \" + ." \
-    "$output" >"$output.tmp"
-  mv "$output.tmp" "$output"
+    # Do substitutions to add extra details to every message. Without these
+    # substitutions, most messages won't have any information about which image
+    # the vulnerability was found in.
+    jq \
+      ".runs[].tool.driver.name |= \"Trivy ${image_name}\"" \
+      "$output" >"$output.tmp"
+    mv "$output.tmp" "$output"
+    jq \
+      ".runs[].results[].locations[].physicalLocation.artifactLocation.uri |= \"${image_name}/\" + ." \
+      "$output" >"$output.tmp"
+    mv "$output.tmp" "$output"
+    jq \
+      ".runs[].results[].locations[].message.text |= \"${image_name}: \" + ." \
+      "$output" >"$output.tmp"
+    mv "$output.tmp" "$output"
+  done
 done
 
 # Merge all SARIF files into one.
