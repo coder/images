@@ -18,7 +18,7 @@ ENV MAVEN_CONFIG="/home/coder/.m2"
 
 RUN mkdir -p $MAVEN_HOME $MAVEN_HOME/ref \
   && echo "Downloading maven" \
-  && curl -fsSL -o /tmp/apache-maven.tar.gz https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  && curl -fsSL -o /tmp/apache-maven.tar.gz https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   && echo "Checking downloaded file hash" \
   && echo "${MAVEN_SHA512}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
   && echo "Unzipping maven" \

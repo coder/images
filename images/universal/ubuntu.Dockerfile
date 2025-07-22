@@ -33,7 +33,7 @@ RUN wget -O go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz \
     && rm go.tar.gz
 
 # Install Maven
-RUN wget -O maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz \
+RUN wget -O maven.tar.gz https://downloads.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz \
     && tar -C /opt -xzf maven.tar.gz \
     && mv /opt/apache-maven-3.9.10 /opt/maven \
     && rm maven.tar.gz
