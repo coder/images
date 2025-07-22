@@ -5,9 +5,9 @@ USER root
 COPY first-run-notice.txt /usr/local/etc/vscode-dev-containers/
 
 # Install universal development tools
+# Common development tools, programming languages and runtimes, additional tools
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
-        # Common development tools
         build-essential \
         curl \
         wget \
@@ -16,14 +16,12 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         nano \
         unzip \
         zip \
-        # Programming languages and runtimes
         python3 \
         python3-pip \
         python3-venv \
         nodejs \
         npm \
         openjdk-11-jdk \
-        # Additional tools
         jq \
         htop \
         tree \
