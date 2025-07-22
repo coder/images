@@ -1,6 +1,6 @@
-# Enterprise Base
+# Example Base
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/codercom/enterprise-base?label=codercom%2Fenterprise-base)](https://hub.docker.com/r/codercom/enterprise-base)
+[![Docker Pulls](https://img.shields.io/docker/pulls/codercom/example-base?label=codercom%2Fexample-base)](https://hub.docker.com/r/codercom/example-base)
 
 ## Description
 
