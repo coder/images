@@ -9,4 +9,5 @@ IMAGES=(
   "java"
   "node"
   "desktop"
+  "universal"
 )
