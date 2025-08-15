@@ -47,7 +47,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check formatting
         uses: dprint/check@v2.3
@@ -63,7 +63,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Trivy using install script
         run: |
