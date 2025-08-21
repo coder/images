@@ -1,50 +1,36 @@
 FROM codercom/enterprise-base:ubuntu
 
-# Run everything as root
+ARG DEBIAN_FRONTEND="noninteractive"
+ARG SDKMAN_SHA512="a8fc6a336d31f2e4980cfe39ee9f11a0f2ee70bc721094b7ea63b953fd1675474765a4e273d6575ea207aa59c15f4fe867e963c0c47580f2131edc2ae8d4fd34"
+
+ENV SDKMAN_DIR="/home/coder/.sdkman" \
+    JAVA_VERSION="21.0.8-tem" \
+    GRADLE_VERSION="8.14.3" \
+    MAVEN_VERSION="3.9.11" \
+    MAVEN_CONFIG="/home/coder/.m2"
+
 USER root
 
-# Install JDK (OpenJDK 8)
-RUN DEBIAN_FRONTEND="noninteractive" apt-get update -y && \
-    apt-get install -y openjdk-11-jdk
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV PATH=$PATH:$JAVA_HOME/bin
+RUN apt-get update -qq && \
+  apt-get install -qq -y \
+    --no-install-recommends \
+    --no-install-suggests \
+    zip && \
+  rm -rf /var/lib/apt/lists/*
 
-# Install Maven
-ARG MAVEN_VERSION=3.9.10
-ARG MAVEN_SHA512=4ef617e421695192a3e9a53b3530d803baf31f4269b26f9ab6863452d833da5530a4d04ed08c36490ad0f141b55304bceed58dbf44821153d94ae9abf34d0e1b
-
-ENV MAVEN_HOME=/usr/share/maven
-ENV MAVEN_CONFIG="/home/coder/.m2"
-
-RUN mkdir -p $MAVEN_HOME $MAVEN_HOME/ref \
-  && echo "Downloading maven" \
-  && curl -fsSL -o /tmp/apache-maven.tar.gz https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-  && echo "Checking downloaded file hash" \
-  && echo "${MAVEN_SHA512}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
-  && echo "Unzipping maven" \
-  && tar -xzf /tmp/apache-maven.tar.gz -C $MAVEN_HOME --strip-components=1 \
-  && echo "Cleaning and setting links" \
-  && rm -f /tmp/apache-maven.tar.gz \
-  && ln -s $MAVEN_HOME/bin/mvn /usr/bin/mvn
-
-# Install Gradle
-ENV GRADLE_VERSION=6.7
-ARG GRADLE_SHA512=d495bc65379d2a854d2cca843bd2eeb94f381e5a7dcae89e6ceb6ef4c5835524932313e7f30d7a875d5330add37a5fe23447dc3b55b4d95dffffa870c0b24493
-
-ENV GRADLE_HOME=/usr/bin/gradle
-
-RUN mkdir -p /usr/share/gradle /usr/share/gradle/ref \
-  && echo "Downloading gradle" \
-  && curl -fsSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
-  && echo "Checking downloaded file hash" \
-  && echo "${GRADLE_SHA512}  /tmp/gradle.zip" | sha512sum -c - \
-  && echo "Unziping gradle" \
-  && unzip -d /usr/share/gradle /tmp/gradle.zip \
-  && echo "Cleaning and setting links" \
-  && rm -f /tmp/gradle.zip \
-  && ln -s /usr/share/gradle/gradle-${GRADLE_VERSION} /usr/bin/gradle
-
-ENV PATH=$PATH:$GRADLE_HOME/bin
-
-# Set back to coder user
 USER coder
+
+RUN curl -fsSL "https://get.sdkman.io?ci=true" -o /tmp/install_sdkman.sh && \
+    echo "${SDKMAN_SHA512} /tmp/install_sdkman.sh" | sha512sum -c - && \
+    bash /tmp/install_sdkman.sh && \
+    rm /tmp/install_sdkman.sh && \
+    bash -c "source ${SDKMAN_DIR}/bin/sdkman-init.sh && \
+      sdk install java ${JAVA_VERSION} && \
+      sdk default java ${JAVA_VERSION} && \
+      sdk install gradle ${GRADLE_VERSION} && \
+      sdk default gradle ${GRADLE_VERSION} && \
+      sdk install maven ${MAVEN_VERSION} && \
+      sdk default maven ${MAVEN_VERSION} && \
+      sdk flush archives && \
+      sdk flush temp && \
+      sdk current"
