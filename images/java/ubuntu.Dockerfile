@@ -1,10 +1,9 @@
 FROM codercom/enterprise-base:ubuntu
 
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG SDKMAN_SHA512="ade94c3b8454bac9411139a46adbd68a16f05766b9bc6fa7061535bbce353c93578393e46cc0d90c630691774d1057b234134fe7af105e1e649f4e8811794de4"
+ARG SDKMAN_SHA512="a8fc6a336d31f2e4980cfe39ee9f11a0f2ee70bc721094b7ea63b953fd1675474765a4e273d6575ea207aa59c15f4fe867e963c0c47580f2131edc2ae8d4fd34"
 
 ENV SDKMAN_DIR="/home/coder/.sdkman" \
-    SDKMAN_CLI_AUTO_CONFIRM=true \
     JAVA_VERSION="21.0.8-tem" \
     GRADLE_VERSION="8.14.3" \
     MAVEN_VERSION="3.9.11" \
@@ -21,7 +20,7 @@ RUN apt-get update -qq && \
 
 USER coder
 
-RUN curl -fsSL https://get.sdkman.io -o /tmp/install_sdkman.sh && \
+RUN curl -fsSL "https://get.sdkman.io?ci=true" -o /tmp/install_sdkman.sh && \
     echo "${SDKMAN_SHA512} /tmp/install_sdkman.sh" | sha512sum -c - && \
     bash /tmp/install_sdkman.sh && \
     rm /tmp/install_sdkman.sh && \
