@@ -7,6 +7,7 @@ IMAGES=(
   "minimal"
   "golang"
   "java"
+  "java-sdkman"
   "node"
   "desktop"
 )
