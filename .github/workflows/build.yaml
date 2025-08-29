@@ -71,6 +71,8 @@ jobs:
 
       - name: Set up Depot CLI
         uses: depot/setup-action@v1
+        with:
+          oidc: true
 
       - name: Build ubuntu images
         run: |
