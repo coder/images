@@ -82,7 +82,7 @@ done
 
 docker_flags=()
 
-if [ $QUIET = true ]; then
+if [ "$QUIET" = true ]; then
   docker_flags+=(
     --quiet
   )
@@ -94,15 +94,24 @@ for image in "${IMAGES[@]}"; do
   enterprise_image_ref="codercom/enterprise-$image:$TAG"
   example_image_ref="codercom/example-$image:$TAG"
   image_path="$image_dir/$image_file"
+  platforms="linux/arm64,linux/amd64,linux/arm/v7"
 
   if [ ! -f "$image_path" ]; then
-    if [ $QUIET = false ]; then
+    if [ "$QUIET" = false ]; then
       echo "Path '$image_path' does not exist; skipping" >&2
     fi
     continue
   fi
 
-  run_trace $DRY_RUN depot build --project "gb3p8xrshk" --load --platform linux/arm64,linux/amd64,linux/arm/v7 --save --metadata-file="build_${image}.json" \
+  if [[ "$image" == "java-sdkman" ]]; then
+    platforms="linux/arm64,linux/amd64"
+  fi
+
+  run_trace $DRY_RUN depot build \
+      --load \
+      --platform "$platforms" \
+      --save \
+      --metadata-file="build_${image}.json" \
     "${docker_flags[@]}" \
     "$image_dir" \
     --file="$image_path" \
