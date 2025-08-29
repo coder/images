@@ -8,6 +8,7 @@ This repository contains example images for use with [Coder](https://coder.com/d
   utilities for a Coder workspace to bootstrap successfully.
 - `example-golang`: Contains Go development tools.
 - `example-java`: Contains Java development tools.
+- `example-java-sdkman`: Contains Java development tools, managed by SDKMAN!.
 - `example-node`: Contains Node.js development tools.
 - `example-desktop`: Contains a desktop environment accessible via web browser.
 
