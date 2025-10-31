@@ -86,13 +86,13 @@ jobs:
             --output-file=trivy-results-ubuntu.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results-ubuntu.sarif
           category: trivy-ubuntu
 
       - name: Upload Trivy scan results as an artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: trivy-ubuntu
           path: trivy-results-ubuntu.sarif
