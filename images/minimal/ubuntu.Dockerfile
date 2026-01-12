@@ -11,6 +11,7 @@ RUN apt-get update && \
     jq \
     locales \
     sudo \
+    iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Generate the desired locale (en_US.UTF-8)
