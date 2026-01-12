@@ -37,7 +37,8 @@ RUN apt-get update && \
     unzip \
     vim \
     wget \
-    rsync && \
+    rsync \
+    iproute2 && \
 # Install latest Git using their official PPA
     add-apt-repository ppa:git-core/ppa && \
     apt-get install --yes git \
