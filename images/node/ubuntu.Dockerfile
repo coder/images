@@ -3,9 +3,19 @@ FROM codercom/enterprise-base:ubuntu
 # Run everything as root
 USER root
 
-# Install whichever Node version is LTS
-RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
-RUN DEBIAN_FRONTEND="noninteractive" apt-get update -y && \
+ARG TARGETARCH
+ARG TARGETVARIANT
+
+# Install Node.js with platform-specific version
+# armv7: Node.js 22.x (last version with armv7 support)
+# others: Latest LTS
+# Ref: https://github.com/nodesource/distributions/issues/1881
+RUN NODE_VERSION="lts"; \
+    if [ "${TARGETARCH}${TARGETVARIANT}" = "armv7" ]; then \
+        NODE_VERSION="22"; \
+    fi && \
+    curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
+    DEBIAN_FRONTEND="noninteractive" apt-get update -y && \
     apt-get install -y nodejs
 
 # Install Yarn
