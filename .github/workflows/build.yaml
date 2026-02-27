@@ -92,7 +92,7 @@ jobs:
           category: trivy-ubuntu
 
       - name: Upload Trivy scan results as an artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-ubuntu
           path: trivy-results-ubuntu.sarif
