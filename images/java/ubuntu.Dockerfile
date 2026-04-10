@@ -10,15 +10,15 @@ ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 ENV PATH=$PATH:$JAVA_HOME/bin
 
 # Install Maven
-ARG MAVEN_VERSION=3.9.12
-ARG MAVEN_SHA512=0a1be79f02466533fc1a80abbef8796e4f737c46c6574ede5658b110899942a94db634477dfd3745501c80aef9aac0d4f841d38574373f7e2d24cce89d694f70
+ARG MAVEN_VERSION=3.9.14
+ARG MAVEN_SHA512=d50af8ab5e6005b46a07f0ce9d3719e67cfdf898da988a84871304cd59fb1af0fef2f99dea709e6e66f21f732f905979b5c2dce6b6860406f60a70e84d9cf0b8
 
 ENV MAVEN_HOME=/usr/share/maven
 ENV MAVEN_CONFIG="/home/coder/.m2"
 
 RUN mkdir -p $MAVEN_HOME $MAVEN_HOME/ref \
   && echo "Downloading maven" \
-  && curl -fsSL -o /tmp/apache-maven.tar.gz https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  && curl -fsSL -o /tmp/apache-maven.tar.gz https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   && echo "Checking downloaded file hash" \
   && echo "${MAVEN_SHA512}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
   && echo "Unzipping maven" \
@@ -28,8 +28,8 @@ RUN mkdir -p $MAVEN_HOME $MAVEN_HOME/ref \
   && ln -s $MAVEN_HOME/bin/mvn /usr/bin/mvn
 
 # Install Gradle
-ENV GRADLE_VERSION=6.7
-ARG GRADLE_SHA512=d495bc65379d2a854d2cca843bd2eeb94f381e5a7dcae89e6ceb6ef4c5835524932313e7f30d7a875d5330add37a5fe23447dc3b55b4d95dffffa870c0b24493
+ENV GRADLE_VERSION=8.14.2
+ARG GRADLE_SHA512=5df80d555e5338c5e67fa3ad11ea8ec534416d3e1414675bdd33a8a8f342ca2cef1ffd882b2f283f56041f6d426adcc5d7d4384e6fbe3eb8edac2c967e9b0ffd
 
 ENV GRADLE_HOME=/usr/bin/gradle
 
