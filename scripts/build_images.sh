@@ -88,6 +88,8 @@ if [ $QUIET = true ]; then
   )
 fi
 
+DEFAULT_PLATFORM="linux/amd64,linux/arm64"
+
 for image in "${IMAGES[@]}"; do
   image_dir="$PROJECT_ROOT/images/$image"
   image_file="${TAG}.Dockerfile"
@@ -102,7 +104,13 @@ for image in "${IMAGES[@]}"; do
     continue
   fi
 
-  run_trace $DRY_RUN depot build --project "gb3p8xrshk" --load --platform linux/amd64,linux/arm64 --save --metadata-file="build_${image}.json" \
+  # Allow per-image platform override via a .platforms file.
+  platform="$DEFAULT_PLATFORM"
+  if [ -f "$image_dir/.platforms" ]; then
+    platform=$(cat "$image_dir/.platforms")
+  fi
+
+  run_trace $DRY_RUN depot build --project "gb3p8xrshk" --load --platform "$platform" --save --metadata-file="build_${image}.json" \
     "${docker_flags[@]}" \
     "$image_dir" \
     --file="$image_path" \
