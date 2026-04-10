@@ -1,4 +1,5 @@
-FROM ubuntu:noble
+ARG UBUNTU_VERSION=noble
+FROM ubuntu:${UBUNTU_VERSION}
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive

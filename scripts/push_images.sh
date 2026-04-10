@@ -106,14 +106,22 @@ for image in "${IMAGES[@]}"; do
   fi
 
   build_id=$(cat "build_${image}.json" | jq -r .\[\"depot.build\"\].buildID)
-  
+
   # Push example images (primary)
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref_date" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/example-${image}:latest" "$build_id"
-  
+
   # Push enterprise images (alias)
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref_date" "$build_id"
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+
+  # Push version-specific tags so users can pin to a specific Ubuntu
+  # release. UBUNTU_VERSION is defined in images.sh and is the single
+  # source of truth used by both the Dockerfiles and this script.
+  for prefix in "example" "enterprise"; do
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${UBUNTU_VERSION}" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${UBUNTU_VERSION}-${date_str}" "$build_id"
+  done
 done
