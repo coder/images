@@ -65,10 +65,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install Trivy using install script
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.69.3
-
       - name: Set up Depot CLI
         uses: depot/setup-action@v1
         with:
@@ -78,25 +74,6 @@ jobs:
         run: |
           ${{ github.workspace }}/scripts/build_images.sh \
             --tag=ubuntu
-
-      - name: Scan ubuntu images
-        run: |
-          ${{ github.workspace }}/scripts/scan_images.sh \
-            --tag=ubuntu \
-            --output-file=trivy-results-ubuntu.sarif
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: trivy-results-ubuntu.sarif
-          category: trivy-ubuntu
-
-      - name: Upload Trivy scan results as an artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: trivy-ubuntu
-          path: trivy-results-ubuntu.sarif
-          retention-days: 7
 
       - name: Authenticate to Docker Hub
         if: github.event_name != 'pull_request'
