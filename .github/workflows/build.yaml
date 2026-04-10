@@ -67,7 +67,7 @@ jobs:
 
       - name: Install Trivy using install script
         run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.37.1
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.69.3
 
       - name: Set up Depot CLI
         uses: depot/setup-action@v1
