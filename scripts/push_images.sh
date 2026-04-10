@@ -15,11 +15,12 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 TAG="ubuntu"
 DRY_RUN=false
 QUIET=false
+REGISTRY="dockerhub"
 
 function usage() {
   echo "Usage: $(basename "$0") [options]"
   echo
-  echo "This script pushes Coder's container images to Docker Hub."
+  echo "This script pushes Coder's container images to a registry."
   echo
   echo "Options:"
   echo " -h, --help                   Show this help text and exit"
@@ -28,6 +29,8 @@ function usage() {
   echo " --tag=<tag>                  Select an image tag group to build,"
   echo "                              e.g. ubuntu)"
   echo " --quiet                      Suppress container build output"
+  echo " --registry=<registry>        Target registry: dockerhub (default)"
+  echo "                              or ghcr.io"
   exit 1
 }
 
@@ -39,7 +42,8 @@ options=$(getopt \
                 help, \
                 dry-run, \
                 tag:, \
-                quiet" \
+                quiet, \
+                registry:" \
             --options="h" \
             -- "$@")
 # allow checking the exit code separately here, because we need both
@@ -62,6 +66,10 @@ while true; do
     ;;
   --quiet)
     QUIET=true
+    ;;
+  --registry)
+    shift
+    REGISTRY="$1"
     ;;
   -h|--help)
     usage
@@ -92,10 +100,6 @@ date_str=$(date --utc +%Y%m%d)
 for image in "${IMAGES[@]}"; do
   image_dir="$PROJECT_ROOT/images/$image"
   image_file="${TAG}.Dockerfile"
-  enterprise_image_ref="codercom/enterprise-$image:$TAG"
-  enterprise_image_ref_date="${enterprise_image_ref}-${date_str}"
-  example_image_ref="codercom/example-$image:$TAG"
-  example_image_ref_date="${example_image_ref}-${date_str}"
   image_path="$image_dir/$image_file"
 
   if [ ! -f "$image_path" ]; then
@@ -106,14 +110,29 @@ for image in "${IMAGES[@]}"; do
   fi
 
   build_id=$(cat "build_${image}.json" | jq -r .\[\"depot.build\"\].buildID)
-  
-  # Push example images (primary)
-  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref" "$build_id"
-  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref_date" "$build_id"
-  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/example-${image}:latest" "$build_id"
-  
-  # Push enterprise images (alias)
-  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref" "$build_id"
-  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref_date" "$build_id"
-  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+
+  if [ "$REGISTRY" = "ghcr.io" ]; then
+    # Push to GHCR with new naming: ghcr.io/coder/$TAG:$IMAGE
+    ghcr_ref="ghcr.io/coder/${TAG}:${image}"
+    ghcr_ref_date="ghcr.io/coder/${TAG}:${image}-${date_str}"
+
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$ghcr_ref" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$ghcr_ref_date" "$build_id"
+  else
+    # Push to Docker Hub (default, existing behavior)
+    enterprise_image_ref="codercom/enterprise-$image:$TAG"
+    enterprise_image_ref_date="${enterprise_image_ref}-${date_str}"
+    example_image_ref="codercom/example-$image:$TAG"
+    example_image_ref_date="${example_image_ref}-${date_str}"
+
+    # Push example images (primary)
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref_date" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/example-${image}:latest" "$build_id"
+
+    # Push enterprise images (alias)
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref_date" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+  fi
 done

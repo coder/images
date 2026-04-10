@@ -22,6 +22,28 @@ under the `ubuntu` tag.
 > For backward compatibility, these images are also available with the `enterprise-` prefix
 > (e.g., `codercom/enterprise-base`), but the `example-` prefix is recommended for new deployments.
 
+## Images on GHCR
+
+Images are also published to the GitHub Container Registry (GHCR) under a
+distro-based naming convention:
+
+```
+ghcr.io/coder/<distro>:<image>
+```
+
+For example:
+
+| Image   | GHCR Reference                 |
+| ------- | ------------------------------ |
+| base    | `ghcr.io/coder/ubuntu:base`    |
+| minimal | `ghcr.io/coder/ubuntu:minimal` |
+| golang  | `ghcr.io/coder/ubuntu:golang`  |
+| java    | `ghcr.io/coder/ubuntu:java`    |
+| node    | `ghcr.io/coder/ubuntu:node`    |
+| desktop | `ghcr.io/coder/ubuntu:desktop` |
+
+Date-tagged variants are also available (e.g., `ghcr.io/coder/ubuntu:base-20250410`).
+
 ## Contributing
 
 See our [contributing guide](.github/CONTRIBUTING.md).

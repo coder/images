@@ -31,7 +31,7 @@ permissions:
   id-token: write
   deployments: none
   issues: none
-  packages: none
+  packages: write
   pull-requests: none
   repository-projects: none
   security-events: write
@@ -87,3 +87,18 @@ jobs:
         run: |
           ${{ github.workspace }}/scripts/push_images.sh \
             --tag=ubuntu
+
+      - name: Authenticate to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push images to GHCR
+        if: github.event_name != 'pull_request'
+        run: |
+          ${{ github.workspace }}/scripts/push_images.sh \
+            --tag=ubuntu \
+            --registry=ghcr.io
