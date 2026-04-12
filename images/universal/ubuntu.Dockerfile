@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/devcontainers/universal:linux
+ARG UBUNTU_VERSION=noble
+FROM mcr.microsoft.com/devcontainers/universal:${UBUNTU_VERSION}
 
 USER root
 

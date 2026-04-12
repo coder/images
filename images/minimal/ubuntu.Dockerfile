@@ -1,4 +1,5 @@
-FROM ubuntu:noble
+ARG UBUNTU_VERSION=noble
+FROM ubuntu:${UBUNTU_VERSION}
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
