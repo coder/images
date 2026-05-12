@@ -4,4 +4,4 @@
 
 ## Description
 
-Microsoft's [Universal Dev Container Image](https://github.com/devcontainers/images/tree/main/src/universal) extended with a `coder` user.
+Microsoft's [Universal Dev Container Image](https://github.com/devcontainers/images/tree/main/src/universal) with the upstream `codespace` user renamed to `coder` so the base image's home directory and shell environment are preserved.
