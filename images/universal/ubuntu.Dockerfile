@@ -12,14 +12,12 @@ RUN rm -R /opt/conda && \
 # Install Chrome for AI Browser Testing
 RUN yes | npx playwright install chrome
 
-# Create `coder` user
-RUN userdel -r codespace && \
-    useradd coder \
-    --create-home \
-    --shell=/bin/bash \
-    --groups=docker \
-    --uid=1000 \
-    --user-group && \
-echo "coder ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd
+# Rename the upstream `codespace` user to `coder` so we preserve the
+# existing home directory and shell environment provided by the base image.
+RUN usermod -l coder codespace && \
+    groupmod -n coder codespace && \
+    usermod -d /home/coder -m coder && \
+    usermod -aG docker,sudo coder && \
+    echo "coder ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd
 
 USER coder
