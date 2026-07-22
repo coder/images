@@ -1,5 +1,7 @@
-ARG UBUNTU_VERSION=noble
-FROM mcr.microsoft.com/devcontainers/universal:${UBUNTU_VERSION}
+# Pinned to noble because Microsoft's devcontainers/universal image does not
+# yet publish a resolute (26.04) tag. Re-couple this to the shared
+# UBUNTU_VERSION build arg once an upstream resolute tag is available.
+FROM mcr.microsoft.com/devcontainers/universal:noble
 
 USER root
 

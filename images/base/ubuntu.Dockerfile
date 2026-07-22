@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=noble
+ARG UBUNTU_VERSION=resolute
 FROM ubuntu:${UBUNTU_VERSION}
 
 SHELL ["/bin/bash", "-c"]
