@@ -118,10 +118,12 @@ for image in "${IMAGES[@]}"; do
   run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
 
   # Push version-specific tags so users can pin to a specific Ubuntu
-  # release. UBUNTU_VERSION is defined in images.sh and is the single
-  # source of truth used by both the Dockerfiles and this script.
+  # release. The version comes from images.sh (the single source of
+  # truth) via ubuntu_version_for, which honours per-image overrides so
+  # each image is tagged with the release it is actually built from.
+  image_ubuntu_version="$(ubuntu_version_for "$image")"
   for prefix in "example" "enterprise"; do
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${UBUNTU_VERSION}" "$build_id"
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${UBUNTU_VERSION}-${date_str}" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${image_ubuntu_version}" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${image_ubuntu_version}-${date_str}" "$build_id"
   done
 done
