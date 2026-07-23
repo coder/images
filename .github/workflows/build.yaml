@@ -47,7 +47,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.13.1
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check formatting
         uses: dprint/check@v2.3
@@ -63,7 +63,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.13.1
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Depot CLI
         uses: depot/setup-action@v1
