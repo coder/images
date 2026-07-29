@@ -1,0 +1,6 @@
+Welcome to Coder! This environment includes a suite of common tools and languages
+(Python, Java, Node.js, Go, Rust, .NET, Ruby, PHP, etc.) for both amd64 and arm64.
+
+➡️ https://github.com/coder/images/tree/main/images/kitchensink
+
+To use another image, modify your devcontainer.json or your Coder Template.

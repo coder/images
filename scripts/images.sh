@@ -17,4 +17,5 @@ IMAGES=(
   "node"
   "desktop"
   "universal"
+  "kitchensink"
 )
