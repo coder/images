@@ -6,15 +6,11 @@
 
 A multi-language "kitchen sink" image built on `codercom/enterprise-base:ubuntu`, published for `linux/amd64` and `linux/arm64`. It offers a multi-arch alternative to the `universal` image, whose upstream base ([Microsoft's Universal Dev Container Image](https://github.com/devcontainers/images/tree/main/src/universal)) is only published for amd64.
 
-Included toolchains and utilities:
+Toolchains are installed via Homebrew (Tier 1 on Linux ARM64 as of Homebrew 5.0), plus dedicated version managers:
 
-- Python 3 (with `pipx` and `venv`, inherited from the base image)
-- Node.js LTS (with `yarn` and `pnpm` via Corepack)
-- Go
-- Java (OpenJDK 21)
-- .NET SDK 8.0
-- Ruby
-- PHP (with Composer)
-- Rust (via `rustup`, installed for the `coder` user)
-- Docker, Git, GitHub CLI, and common shell utilities
-- A Playwright-managed browser for AI browser testing (Google Chrome on amd64, Chromium on arm64, at `/usr/local/ms-playwright`)
+- Homebrew: Go (with `gofumpt`, `golangci-lint`, `staticcheck`), Node.js (with `yarn`, `pnpm`, `fnm`), Ruby, Kotlin, Gradle, Maven, `mise`, `just`, `ninja`, `cmake`, OpenTofu, `fish`, `typos-cli`, `clang-format`, `pkgconf`, `rebar3`
+- `uv` with a default Python install
+- Rust via `rustup` (with `cargo-binstall` and `cargo-nextest`)
+- Docker, Git, and common shell utilities inherited from the base image
+
+All user-facing tooling runs as the `coder` user.
