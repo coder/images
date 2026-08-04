@@ -111,7 +111,7 @@ for image in "${IMAGES[@]}"; do
   fi
 
   run_trace $DRY_RUN depot build --project "gb3p8xrshk" --load --platform "$platform" --save --metadata-file="build_${image}.json" \
-    --build-arg "UBUNTU_VERSION=$UBUNTU_VERSION" \
+    --build-arg "UBUNTU_VERSION=$(ubuntu_version_for "$image")" \
     "${docker_flags[@]}" \
     "$image_dir" \
     --file="$image_path" \

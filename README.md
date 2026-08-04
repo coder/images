@@ -23,13 +23,13 @@ under the `ubuntu` tag.
 
 Each image is published with the following tag variants:
 
-| Tag                       | Example                                       | Description                                        |
-| ------------------------- | --------------------------------------------- | -------------------------------------------------- |
-| `ubuntu`                  | `codercom/example-base:ubuntu`                | Latest Ubuntu version (rolling)                    |
-| `ubuntu-{version}`        | `codercom/example-base:ubuntu-noble`          | Pinned to a specific Ubuntu release                |
-| `ubuntu-{date}`           | `codercom/example-base:ubuntu-20250101`       | Snapshot from a specific build date                |
-| `ubuntu-{version}-{date}` | `codercom/example-base:ubuntu-noble-20250101` | Version-pinned snapshot from a specific build date |
-| `latest`                  | `codercom/example-base:latest`                | Alias for the latest build                         |
+| Tag                       | Example                                          | Description                                        |
+| ------------------------- | ------------------------------------------------ | -------------------------------------------------- |
+| `ubuntu`                  | `codercom/example-base:ubuntu`                   | Latest Ubuntu version (rolling)                    |
+| `ubuntu-{version}`        | `codercom/example-base:ubuntu-resolute`          | Pinned to a specific Ubuntu release                |
+| `ubuntu-{date}`           | `codercom/example-base:ubuntu-20250101`          | Snapshot from a specific build date                |
+| `ubuntu-{version}-{date}` | `codercom/example-base:ubuntu-resolute-20250101` | Version-pinned snapshot from a specific build date |
+| `latest`                  | `codercom/example-base:latest`                   | Alias for the latest build                         |
 
 > For backward compatibility, these images are also available with the `enterprise-` prefix
 > (e.g., `codercom/enterprise-base`), but the `example-` prefix is recommended for new deployments.
