@@ -36,8 +36,6 @@ RUN mkdir -p /var/lib/shared/overlay-images \
     /var/lib/shared/vfs-images/images.lock \
     /var/lib/shared/vfs-layers/layers.lock
 
-ENV _CONTAINERS_USERNS_CONFIGURED=""
-
 # Alias "docker" to "podman"
 RUN [ -e /usr/bin/docker ] || ln -s /usr/bin/podman /usr/bin/docker
 

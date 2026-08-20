@@ -16,11 +16,14 @@ repository.
 
 ## How To Use
 
-See
+Visit
 [Docker in Workspaces: Rootless Podman](https://coder.com/docs/admin/templates/extending-templates/docker-in-workspaces#rootless-podman)
 for the template changes this image pairs with: an AppArmor `unconfined`
 profile for the workspace container and a FUSE device exposed via
 smarter-device-manager.
+
+Rootless container storage lives under `~/.local/share/containers/storage`,
+so it lands on the workspace home volume with no extra mounts required.
 
 Nodes must have Linux user namespaces enabled
 (`sysctl user.max_user_namespaces` greater than 0). Notably,
