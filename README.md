@@ -10,6 +10,8 @@ This repository contains example images for use with [Coder](https://coder.com/d
 - `example-java`: Contains Java development tools.
 - `example-node`: Contains Node.js development tools.
 - `example-desktop`: Contains a desktop environment accessible via web browser.
+- `example-podman`: Contains rootless Podman for building and running
+  containers without a privileged runtime.
 
 ## Images on Docker Hub
 
