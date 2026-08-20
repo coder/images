@@ -36,4 +36,5 @@ IMAGES=(
   "desktop"
   "universal"
   "kitchensink"
+  "podman"
 )
