@@ -31,7 +31,7 @@ permissions:
   id-token: write
   deployments: none
   issues: none
-  packages: write
+  packages: none
   pull-requests: none
   repository-projects: none
   security-events: write
@@ -47,13 +47,21 @@ jobs:
         uses: styfle/cancel-workflow-action@0.13.1
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check formatting
-        uses: dprint/check@v2.3
+        uses: dprint/check@v2.5
 
   images:
     runs-on: ubuntu-latest
+    # Job-level permissions replace the workflow defaults, so repeat the ones
+    # this job needs and add packages: write for pushing to GHCR.
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      packages: write
+      security-events: write
     strategy:
       fail-fast: false
     name: images/ubuntu
@@ -63,7 +71,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.13.1
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Depot CLI
         uses: depot/setup-action@v1

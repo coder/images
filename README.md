@@ -10,6 +10,8 @@ This repository contains example images for use with [Coder](https://coder.com/d
 - `example-java`: Contains Java development tools.
 - `example-node`: Contains Node.js development tools.
 - `example-desktop`: Contains a desktop environment accessible via web browser.
+- `example-podman`: Contains rootless Podman for building and running
+  containers without a privileged runtime.
 
 ## Images on Docker Hub
 
@@ -19,30 +21,36 @@ https://hub.docker.com/r/codercom/example-base. The tag is taken from the
 filename of the Dockerfile. For example, `base/ubuntu.Dockerfile` is
 under the `ubuntu` tag.
 
+### Available Tags
+
+Each image is published with the following tag variants:
+
+| Tag                       | Example                                          | Description                                        |
+| ------------------------- | ------------------------------------------------ | -------------------------------------------------- |
+| `ubuntu`                  | `codercom/example-base:ubuntu`                   | Latest Ubuntu version (rolling)                    |
+| `ubuntu-{version}`        | `codercom/example-base:ubuntu-resolute`          | Pinned to a specific Ubuntu release                |
+| `ubuntu-{date}`           | `codercom/example-base:ubuntu-20250101`          | Snapshot from a specific build date                |
+| `ubuntu-{version}-{date}` | `codercom/example-base:ubuntu-resolute-20250101` | Version-pinned snapshot from a specific build date |
+| `latest`                  | `codercom/example-base:latest`                   | Alias for the latest build                         |
+
 > For backward compatibility, these images are also available with the `enterprise-` prefix
 > (e.g., `codercom/enterprise-base`), but the `example-` prefix is recommended for new deployments.
 
 ## Images on GHCR
 
-Images are also published to the GitHub Container Registry (GHCR) under a
-distro-based naming convention:
+Each image is also published to the GitHub Container Registry (GHCR) under
+`ghcr.io/coder/<distro>:<image>`. The repository is taken from the filename of
+the Dockerfile and the tag from its directory. For example,
+`base/ubuntu.Dockerfile` is available at `ghcr.io/coder/ubuntu:base`.
 
-```
-ghcr.io/coder/<distro>:<image>
-```
+### Available Tags
 
-For example:
-
-| Image   | GHCR Reference                 |
-| ------- | ------------------------------ |
-| base    | `ghcr.io/coder/ubuntu:base`    |
-| minimal | `ghcr.io/coder/ubuntu:minimal` |
-| golang  | `ghcr.io/coder/ubuntu:golang`  |
-| java    | `ghcr.io/coder/ubuntu:java`    |
-| node    | `ghcr.io/coder/ubuntu:node`    |
-| desktop | `ghcr.io/coder/ubuntu:desktop` |
-
-Date-tagged variants are also available (e.g., `ghcr.io/coder/ubuntu:base-20250410`).
+| Tag                        | Example                                       | Description                                        |
+| -------------------------- | --------------------------------------------- | -------------------------------------------------- |
+| `{image}`                  | `ghcr.io/coder/ubuntu:base`                   | Latest Ubuntu version (rolling)                    |
+| `{image}-{version}`        | `ghcr.io/coder/ubuntu:base-resolute`          | Pinned to a specific Ubuntu release                |
+| `{image}-{date}`           | `ghcr.io/coder/ubuntu:base-20250101`          | Snapshot from a specific build date                |
+| `{image}-{version}-{date}` | `ghcr.io/coder/ubuntu:base-resolute-20250101` | Version-pinned snapshot from a specific build date |
 
 ## Contributing
 

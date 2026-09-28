@@ -96,6 +96,14 @@ if [ $QUIET = true ]; then
   )
 fi
 
+case "$REGISTRY" in
+dockerhub | ghcr.io) ;;
+*)
+  echo "Unknown registry: $REGISTRY" >&2
+  usage
+  ;;
+esac
+
 date_str=$(date --utc +%Y%m%d)
 for image in "${IMAGES[@]}"; do
   image_dir="$PROJECT_ROOT/images/$image"
@@ -111,28 +119,40 @@ for image in "${IMAGES[@]}"; do
 
   build_id=$(cat "build_${image}.json" | jq -r .\[\"depot.build\"\].buildID)
 
+  image_ubuntu_version="$(ubuntu_version_for "$image")"
+
   if [ "$REGISTRY" = "ghcr.io" ]; then
-    # Push to GHCR with new naming: ghcr.io/coder/$TAG:$IMAGE
+    # GHCR images use the distro as the repository and the image name as
+    # the tag, e.g. ghcr.io/coder/ubuntu:base. See coder/images#291.
     ghcr_ref="ghcr.io/coder/${TAG}:${image}"
-    ghcr_ref_date="ghcr.io/coder/${TAG}:${image}-${date_str}"
-
     run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$ghcr_ref" "$build_id"
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$ghcr_ref_date" "$build_id"
-  else
-    # Push to Docker Hub (default, existing behavior)
-    enterprise_image_ref="codercom/enterprise-$image:$TAG"
-    enterprise_image_ref_date="${enterprise_image_ref}-${date_str}"
-    example_image_ref="codercom/example-$image:$TAG"
-    example_image_ref_date="${example_image_ref}-${date_str}"
-
-    # Push example images (primary)
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref" "$build_id"
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref_date" "$build_id"
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/example-${image}:latest" "$build_id"
-
-    # Push enterprise images (alias)
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref" "$build_id"
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref_date" "$build_id"
-    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "${ghcr_ref}-${date_str}" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "${ghcr_ref}-${image_ubuntu_version}" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "${ghcr_ref}-${image_ubuntu_version}-${date_str}" "$build_id"
+    continue
   fi
+
+  enterprise_image_ref="codercom/enterprise-$image:$TAG"
+  enterprise_image_ref_date="${enterprise_image_ref}-${date_str}"
+  example_image_ref="codercom/example-$image:$TAG"
+  example_image_ref_date="${example_image_ref}-${date_str}"
+
+  # Push example images (primary)
+  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref" "$build_id"
+  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$example_image_ref_date" "$build_id"
+  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/example-${image}:latest" "$build_id"
+
+  # Push enterprise images (alias)
+  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref" "$build_id"
+  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "$enterprise_image_ref_date" "$build_id"
+  run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/enterprise-${image}:latest" "$build_id"
+
+  # Push version-specific tags so users can pin to a specific Ubuntu
+  # release. The version comes from images.sh (the single source of
+  # truth) via ubuntu_version_for, which honours per-image overrides so
+  # each image is tagged with the release it is actually built from.
+  for prefix in "example" "enterprise"; do
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${image_ubuntu_version}" "$build_id"
+    run_trace $DRY_RUN depot push --project "gb3p8xrshk" --tag "codercom/${prefix}-${image}:${TAG}-${image_ubuntu_version}-${date_str}" "$build_id"
+  done
 done

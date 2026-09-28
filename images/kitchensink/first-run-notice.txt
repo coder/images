@@ -1,0 +1,7 @@
+Welcome to Coder! This environment includes a suite of common tools and languages
+managed via Homebrew, mise, uv, fnm, and rustup (Go, Node.js, Python, Rust, Ruby,
+Java/Kotlin, and more) for both amd64 and arm64.
+
+➡️ https://github.com/coder/images/tree/main/images/kitchensink
+
+To use another image, modify your devcontainer.json or your Coder Template.
