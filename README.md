@@ -36,6 +36,22 @@ Each image is published with the following tag variants:
 > For backward compatibility, these images are also available with the `enterprise-` prefix
 > (e.g., `codercom/enterprise-base`), but the `example-` prefix is recommended for new deployments.
 
+## Images on GHCR
+
+Each image is also published to the GitHub Container Registry (GHCR) under
+`ghcr.io/coder/<distro>:<image>`. The repository is taken from the filename of
+the Dockerfile and the tag from its directory. For example,
+`base/ubuntu.Dockerfile` is available at `ghcr.io/coder/ubuntu:base`.
+
+### Available Tags
+
+| Tag                        | Example                                       | Description                                        |
+| -------------------------- | --------------------------------------------- | -------------------------------------------------- |
+| `{image}`                  | `ghcr.io/coder/ubuntu:base`                   | Latest Ubuntu version (rolling)                    |
+| `{image}-{version}`        | `ghcr.io/coder/ubuntu:base-resolute`          | Pinned to a specific Ubuntu release                |
+| `{image}-{date}`           | `ghcr.io/coder/ubuntu:base-20250101`          | Snapshot from a specific build date                |
+| `{image}-{version}-{date}` | `ghcr.io/coder/ubuntu:base-resolute-20250101` | Version-pinned snapshot from a specific build date |
+
 ## Contributing
 
 See our [contributing guide](.github/CONTRIBUTING.md).
