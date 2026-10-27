@@ -36,6 +36,13 @@ RUN cp /etc/profile.d/00-restore-env.sh /tmp/00-restore-env.sh && \
     mv /tmp/00-restore-env.sh /etc/profile.d/00-restore-env.sh && \
     rm -rf /tmp/php-install.sh /var/lib/apt/lists/*
 
+# Disable PHP session upload progress tracking for every installed version,
+# and fail the build if any version still reports it as enabled.
+RUN for php_dir in /usr/local/php/[0-9]*; do \
+        echo "session.upload_progress.enabled=0" >"${php_dir}/ini/conf.d/session.ini" && \
+        "${php_dir}/bin/php" -r 'exit((int) ini_get("session.upload_progress.enabled"));' || exit 1; \
+    done
+
 # Rename the upstream `codespace` user to `coder` so we preserve the
 # existing home directory and shell environment provided by the base image.
 RUN usermod -l coder codespace && \
