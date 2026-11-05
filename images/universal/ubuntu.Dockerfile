@@ -7,7 +7,6 @@ FROM mcr.microsoft.com/devcontainers/universal:${UBUNTU_VERSION}
 USER root
 
 # Upgrade packages from the upstream image, which can lag behind Ubuntu
-# security updates such as the apt fix for CVE-2026-109518 (USN-8996-1).
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --no-install-recommends --no-install-suggests && \
     rm -rf /var/lib/apt/lists/*
