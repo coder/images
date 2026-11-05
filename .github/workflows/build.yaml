@@ -54,6 +54,14 @@ jobs:
 
   images:
     runs-on: ubuntu-latest
+    # Job-level permissions replace the workflow defaults, so repeat the ones
+    # this job needs and add packages: write for pushing to GHCR.
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      packages: write
+      security-events: write
     strategy:
       fail-fast: false
     name: images/ubuntu
@@ -87,3 +95,18 @@ jobs:
         run: |
           ${{ github.workspace }}/scripts/push_images.sh \
             --tag=ubuntu
+
+      - name: Authenticate to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push images to GHCR
+        if: github.event_name != 'pull_request'
+        run: |
+          ${{ github.workspace }}/scripts/push_images.sh \
+            --tag=ubuntu \
+            --registry=ghcr.io
