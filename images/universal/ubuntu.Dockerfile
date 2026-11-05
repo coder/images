@@ -6,6 +6,11 @@ FROM mcr.microsoft.com/devcontainers/universal:${UBUNTU_VERSION}
 
 USER root
 
+# Upgrade packages from the upstream image, which can lag behind Ubuntu
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --no-install-recommends --no-install-suggests && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY first-run-notice.txt /usr/local/etc/vscode-dev-containers/
 
 # Remove Conda to avoid any license issues

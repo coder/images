@@ -4,6 +4,7 @@ FROM ubuntu:${UBUNTU_VERSION}
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
+    apt-get upgrade -y --no-install-recommends --no-install-suggests && \
     apt-get install -y --no-install-recommends \
     bash \
     ca-certificates \
