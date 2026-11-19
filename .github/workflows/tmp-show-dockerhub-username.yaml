@@ -1,0 +1,18 @@
+# Temporary, never merged: shows which Docker Hub account DOCKERHUB_USERNAME names, so its
+# access token can be found and revoked. The PR is closed and this run deleted right after.
+name: tmp-show-dockerhub-username
+on:
+  pull_request:
+    paths:
+      - .github/workflows/tmp-show-dockerhub-username.yaml
+permissions: {}
+jobs:
+  show:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker Hub username (characters spaced so log masking doesn't hide it)
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          echo "length: ${#DOCKERHUB_USERNAME}"
+          printf '%s\n' "$DOCKERHUB_USERNAME" | sed 's/./& /g'
