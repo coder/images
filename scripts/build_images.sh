@@ -15,6 +15,7 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 TAG="ubuntu"
 DRY_RUN=false
 QUIET=false
+NO_CACHE=false
 
 function usage() {
   echo "Usage: $(basename "$0") [options]"
@@ -28,6 +29,7 @@ function usage() {
   echo " --tag=<tag>                  Select an image tag group to build,"
   echo "                              e.g. ubuntu)"
   echo " --quiet                      Suppress container build output"
+  echo " --no-cache                   Build without the layer cache"
   exit 1
 }
 
@@ -39,7 +41,8 @@ options=$(getopt \
                 help, \
                 dry-run, \
                 tag:, \
-                quiet" \
+                quiet, \
+                no-cache" \
             --options="h" \
             -- "$@")
 # allow checking the exit code separately here, because we need both
@@ -63,6 +66,9 @@ while true; do
   --quiet)
     QUIET=true
     ;;
+  --no-cache)
+    NO_CACHE=true
+    ;;
   -h|--help)
     usage
     ;;
@@ -85,6 +91,12 @@ docker_flags=()
 if [ $QUIET = true ]; then
   docker_flags+=(
     --quiet
+  )
+fi
+
+if [ $NO_CACHE = true ]; then
+  docker_flags+=(
+    --no-cache
   )
 fi
 
