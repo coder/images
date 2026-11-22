@@ -70,9 +70,14 @@ jobs:
           oidc: true
 
       - name: Build ubuntu images
+        env:
+          NO_CACHE: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
         run: |
-          "$GITHUB_WORKSPACE/scripts/build_images.sh" \
-            --tag=ubuntu
+          flags=(--tag=ubuntu)
+          if [ "$NO_CACHE" = "true" ]; then
+            flags+=(--no-cache)
+          fi
+          "$GITHUB_WORKSPACE/scripts/build_images.sh" "${flags[@]}"
 
       # The Depot build IDs (scripts/build_<image>.json) that push_images.sh pushes from.
       - name: Upload build IDs
