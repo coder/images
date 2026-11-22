@@ -37,4 +37,5 @@ IMAGES=(
   "universal"
   "kitchensink"
   "podman"
+  "openshell"
 )
